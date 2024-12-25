@@ -62,6 +62,28 @@ const HeaderItems: React.FC = () => {
             isActive={isActivePanel('sideMenu')}
           />
         )}
+        {showAppMenu && (
+          <HeaderGlobalAction
+            aria-label={t('AppMenuTooltip', 'App Menu')}
+            aria-labelledby="App Menu"
+            className={classNames({
+              [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
+              [styles.activePanel]: !isActivePanel('appMenu'),
+            })}
+            enterDelayMs={500}
+            isActive={isActivePanel('appMenu')}
+            tooltipAlignment="end"
+            onClick={() => {
+              togglePanel('appMenu');
+            }}
+          >
+            {isActivePanel('appMenu') ? (
+              <CloseIcon size={30} />
+            ) : (
+              <SwitcherIcon size={30} className={styles.navBarButtonIcon} />
+            )}
+          </HeaderGlobalAction>
+        )}
         <ConfigurableLink to={config.logo.link}>
           <div className={showHamburger ? '' : styles.spacedLogo}>
             <Logo />
@@ -77,7 +99,7 @@ const HeaderItems: React.FC = () => {
               togglePanel: togglePanel,
             }}
           />
-          {showUserMenu && (
+          {/* {showUserMenu && (
             <HeaderGlobalAction
               aria-label={t('userMenuTooltip', 'My Account')}
               aria-labelledby="Users Avatar Icon"
@@ -94,25 +116,7 @@ const HeaderItems: React.FC = () => {
             >
               {isActivePanel('userMenu') ? <CloseIcon size={20} /> : <UserAvatarIcon size={20} />}
             </HeaderGlobalAction>
-          )}
-          {showAppMenu && (
-            <HeaderGlobalAction
-              aria-label={t('AppMenuTooltip', 'App Menu')}
-              aria-labelledby="App Menu"
-              className={classNames({
-                [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
-                [styles.activePanel]: !isActivePanel('appMenu'),
-              })}
-              enterDelayMs={500}
-              isActive={isActivePanel('appMenu')}
-              tooltipAlignment="end"
-              onClick={() => {
-                togglePanel('appMenu');
-              }}
-            >
-              {isActivePanel('appMenu') ? <CloseIcon size={20} /> : <SwitcherIcon size={20} />}
-            </HeaderGlobalAction>
-          )}
+          )} */}
         </HeaderGlobalBar>
         {!isDesktop(layout) && <SideMenuPanel hidePanel={hidePanel('sideMenu')} expanded={isActivePanel('sideMenu')} />}
         {showAppMenu && <AppMenuPanel expanded={isActivePanel('appMenu')} hidePanel={hidePanel('appMenu')} />}
