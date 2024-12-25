@@ -19,6 +19,7 @@
 .topNavHeader {
   top: var(--omrs-offline-banner-height);
   background-color: white;
+  border-bottom: 1px solid #ddd;
 }
 
 .activePanel {
@@ -29,6 +30,8 @@
   &:hover {
     background-color: white;
   }
+  // added because topNavHeader border is applied to two elements resulting to 2px border excluding activePacnel
+  border-bottom: 1px solid #ddd;
 }
 
 .headerMenuButton {
