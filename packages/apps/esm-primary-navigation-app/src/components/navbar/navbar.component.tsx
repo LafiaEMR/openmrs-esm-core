@@ -21,6 +21,7 @@ import NotificationsMenuPanel from '../navbar-header-panels/notifications-menu-p
 import OfflineBanner from '../offline-banner/offline-banner.component';
 import UserMenuPanel from '../navbar-header-panels/user-menu-panel.component';
 import SideMenuPanel from '../navbar-header-panels/side-menu-panel.component';
+import HospitalLogo from '../logo/hospital-logo.component';
 import styles from './navbar.scss';
 
 const HeaderItems: React.FC = () => {
@@ -89,6 +90,9 @@ const HeaderItems: React.FC = () => {
             <Logo />
           </div>
         </ConfigurableLink>
+        <div className={styles.hospitalLogoContainer}>
+          <HospitalLogo />
+        </div>
         <ExtensionSlot className={styles.dividerOverride} name="top-nav-info-slot" />
         <HeaderGlobalBar className={styles.headerGlobalBar}>
           <ExtensionSlot name="top-nav-actions-slot" className={styles.topNavActionsSlot} />
