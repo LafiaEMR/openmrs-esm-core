@@ -13,6 +13,8 @@ import {
   CloseIcon,
   UserAvatarIcon,
   SwitcherIcon,
+  OverflowMenuVerticalIcon,
+  OverflowMenuHorizontalIcon,
 } from '@openmrs/esm-framework';
 import { isDesktop } from '../../utils';
 import AppMenuPanel from '../navbar-header-panels/app-menu-panel.component';
@@ -23,6 +25,7 @@ import UserMenuPanel from '../navbar-header-panels/user-menu-panel.component';
 import SideMenuPanel from '../navbar-header-panels/side-menu-panel.component';
 import HospitalLogo from '../logo/hospital-logo.component';
 import styles from './navbar.scss';
+import AppSwitcherPanel from '../navbar-header-panels/app-switcher-panel.component';
 
 const HeaderItems: React.FC = () => {
   const { t } = useTranslation();
@@ -63,28 +66,27 @@ const HeaderItems: React.FC = () => {
             isActive={isActivePanel('sideMenu')}
           />
         )}
-        {showAppMenu && (
-          <HeaderGlobalAction
-            aria-label={t('AppMenuTooltip', 'App Menu')}
-            aria-labelledby="App Menu"
-            className={classNames({
-              [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
-              [styles.activePanel]: !isActivePanel('appMenu'),
-            })}
-            enterDelayMs={500}
-            isActive={isActivePanel('appMenu')}
-            tooltipAlignment="end"
-            onClick={() => {
-              togglePanel('appMenu');
-            }}
-          >
-            {isActivePanel('appMenu') ? (
-              <CloseIcon size={30} />
-            ) : (
-              <SwitcherIcon size={30} className={styles.navBarButtonIcon} />
-            )}
-          </HeaderGlobalAction>
-        )}
+        <HeaderGlobalAction
+          aria-label={t('AppSwitcher', 'App Switcher')}
+          aria-labelledby="App Switcher"
+          className={classNames(styles.appSwitcher, {
+            [styles.headerGlobalBarButton]: isActivePanel('appSwitcher'),
+            [styles.activePanel]: !isActivePanel('appSwitcher'),
+          })}
+          enterDelayMs={500}
+          isActive={isActivePanel('appSwitcher')}
+          tooltipAlignment="end"
+          onClick={() => {
+            togglePanel('appSwitcher');
+          }}
+        >
+          {isActivePanel('appSwitcher') ? (
+            <CloseIcon size={30} />
+          ) : (
+            <SwitcherIcon size={30} className={styles.navBarButtonIcon} />
+          )}
+        </HeaderGlobalAction>
+
         <ConfigurableLink to={config.logo.link}>
           <div className={showHamburger ? '' : styles.spacedLogo}>
             <Logo />
@@ -103,7 +105,7 @@ const HeaderItems: React.FC = () => {
               togglePanel: togglePanel,
             }}
           />
-          {/* {showUserMenu && (
+          {showUserMenu && (
             <HeaderGlobalAction
               aria-label={t('userMenuTooltip', 'My Account')}
               aria-labelledby="Users Avatar Icon"
@@ -118,12 +120,39 @@ const HeaderItems: React.FC = () => {
                 togglePanel('userMenu');
               }}
             >
-              {isActivePanel('userMenu') ? <CloseIcon size={20} /> : <UserAvatarIcon size={20} />}
+              {isActivePanel('userMenu') ? (
+                <CloseIcon size={30} />
+              ) : (
+                <UserAvatarIcon size={30} className={styles.navBarButtonIcon} />
+              )}
             </HeaderGlobalAction>
-          )} */}
+          )}
+          {showAppMenu && (
+            <HeaderGlobalAction
+              aria-label={t('AppMenuTooltip', 'App Menu')}
+              aria-labelledby="App Menu"
+              className={classNames({
+                [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
+                [styles.activePanel]: !isActivePanel('appMenu'),
+              })}
+              enterDelayMs={500}
+              isActive={isActivePanel('appMenu')}
+              tooltipAlignment="end"
+              onClick={() => {
+                togglePanel('appMenu');
+              }}
+            >
+              {isActivePanel('appMenu') ? (
+                <CloseIcon size={30} />
+              ) : (
+                <OverflowMenuHorizontalIcon size={30} className={styles.navBarButtonIcon} />
+              )}
+            </HeaderGlobalAction>
+          )}
         </HeaderGlobalBar>
         {!isDesktop(layout) && <SideMenuPanel hidePanel={hidePanel('sideMenu')} expanded={isActivePanel('sideMenu')} />}
         {showAppMenu && <AppMenuPanel expanded={isActivePanel('appMenu')} hidePanel={hidePanel('appMenu')} />}
+        <AppSwitcherPanel menuOpen={isActivePanel('appSwitcher')} />
         <NotificationsMenuPanel expanded={isActivePanel('notificationsMenu')} />
         {showUserMenu && <UserMenuPanel expanded={isActivePanel('userMenu')} hidePanel={hidePanel('userMenu')} />}
       </Header>

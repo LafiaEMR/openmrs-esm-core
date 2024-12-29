@@ -1,0 +1,64 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/layout';
+@use '@carbon/colors';
+
+.menu_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 $spacing-04;
+}
+
+.menu_container:hover {
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.menu_container2 {
+  display: flex;
+  align-items: center;
+  padding-left: $spacing-04;
+}
+
+/* Dropdown Menu Styling */
+.menu {
+  position: absolute;
+  top: 40px; /* Adjust based on your header's size */
+  left: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  z-index: 100000;
+  animation: fadeIn 0.3s ease-in-out;
+  padding-bottom: $spacing-10;
+  overflow: hidden;
+}
+
+.menu_item {
+  @include type-style('body-02');
+  padding: $spacing-04;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.menu_item_title {
+  @include type-style('body-02');
+  font-weight: 600;
+  padding: $spacing-05 $spacing-04;
+  transition: background-color 0.2s ease;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
