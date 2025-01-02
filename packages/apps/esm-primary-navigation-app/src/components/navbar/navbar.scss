@@ -6,7 +6,7 @@
   align-items: center;
 
   > a {
-    color: white;
+    color: #000;
     text-decoration: none;
     margin: 0 layout.$spacing-04;
   }
@@ -18,10 +18,20 @@
 
 .topNavHeader {
   top: var(--omrs-offline-banner-height);
+  background-color: white;
+  border-bottom: 1px solid #ddd;
 }
 
 .activePanel {
-  @include brand-01(background-color);
+  background-color: white;
+  &:hover .navBarButtonIcon {
+    background-color: #ddd;
+  }
+  &:hover {
+    background-color: white;
+  }
+  // added because topNavHeader border is applied to two elements resulting to 2px border excluding activePacnel
+  border-bottom: 1px solid #ddd;
 }
 
 .headerMenuButton {
@@ -32,5 +42,28 @@
 }
 
 .spacedLogo {
-  margin-left: layout.$spacing-05;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navBarButtonIcon {
+  padding: 10%;
+  background-color: #eee;
+  * {
+    fill: black;
+  }
+}
+
+.headerMenuButton {
+  * {
+    fill: black;
+  }
+}
+
+.hospitalLogoContainer {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 50px;
 }

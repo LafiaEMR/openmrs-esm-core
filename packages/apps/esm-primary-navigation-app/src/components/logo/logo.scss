@@ -9,3 +9,13 @@
   object-fit: cover;
   object-position: left;
 }
+
+.hospitalLogo {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  img {
+    max-height: 30px; // Adjust this value as needed
+    width: auto;
+  }
+}

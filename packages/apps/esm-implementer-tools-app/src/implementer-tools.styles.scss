@@ -17,7 +17,21 @@
 }
 
 .toolStyles {
-  background-color: transparent;
+  background-color: white;
+  &:hover .navBarButtonIcon {
+    background-color: #ddd;
+  }
+  &:hover {
+    background-color: white;
+  }
+}
+
+.navBarButtonIcon {
+  padding: 10%;
+  background-color: #eee;
+  * {
+    fill: black;
+  }
 }
 
 // Chevron button - implementer-tools component

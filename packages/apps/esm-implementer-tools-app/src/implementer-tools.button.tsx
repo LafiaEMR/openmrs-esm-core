@@ -19,7 +19,11 @@ const ImplementerToolsButton: React.FC = () => {
         name="ImplementerToolsIcon"
         onClick={togglePopup}
       >
-        {isOpen ? <CloseIcon size={20} /> : <ToolsIcon size={20} />}
+        {isOpen ? (
+          <CloseIcon size={30} className={styles.navBarButtonIcon} />
+        ) : (
+          <ToolsIcon size={30} className={styles.navBarButtonIcon} />
+        )}
       </HeaderGlobalAction>
     </UserHasAccess>
   );

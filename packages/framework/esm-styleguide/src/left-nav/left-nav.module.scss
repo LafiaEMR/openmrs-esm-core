@@ -12,14 +12,14 @@
 
     &:focus,
     &:hover {
-      background-color: $ui-01;
+      background-color: #1160fe11;
     }
 
     // Active menu item
     &:global(.active-left-nav-link) {
-      color: $ui-05;
+      color: #1161fe;
       border-left: 0.25rem solid var(--brand-01);
-      background-color: $ui-03;
+      background-color: #1160fe22;
       outline: none;
       padding: 0 0.75rem;
     }

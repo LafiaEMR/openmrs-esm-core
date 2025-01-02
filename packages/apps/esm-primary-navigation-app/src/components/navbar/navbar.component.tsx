@@ -21,6 +21,7 @@ import NotificationsMenuPanel from '../navbar-header-panels/notifications-menu-p
 import OfflineBanner from '../offline-banner/offline-banner.component';
 import UserMenuPanel from '../navbar-header-panels/user-menu-panel.component';
 import SideMenuPanel from '../navbar-header-panels/side-menu-panel.component';
+import HospitalLogo from '../logo/hospital-logo.component';
 import styles from './navbar.scss';
 
 const HeaderItems: React.FC = () => {
@@ -62,11 +63,36 @@ const HeaderItems: React.FC = () => {
             isActive={isActivePanel('sideMenu')}
           />
         )}
+        {showAppMenu && (
+          <HeaderGlobalAction
+            aria-label={t('AppMenuTooltip', 'App Menu')}
+            aria-labelledby="App Menu"
+            className={classNames({
+              [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
+              [styles.activePanel]: !isActivePanel('appMenu'),
+            })}
+            enterDelayMs={500}
+            isActive={isActivePanel('appMenu')}
+            tooltipAlignment="end"
+            onClick={() => {
+              togglePanel('appMenu');
+            }}
+          >
+            {isActivePanel('appMenu') ? (
+              <CloseIcon size={30} />
+            ) : (
+              <SwitcherIcon size={30} className={styles.navBarButtonIcon} />
+            )}
+          </HeaderGlobalAction>
+        )}
         <ConfigurableLink to={config.logo.link}>
           <div className={showHamburger ? '' : styles.spacedLogo}>
             <Logo />
           </div>
         </ConfigurableLink>
+        <div className={styles.hospitalLogoContainer}>
+          <HospitalLogo />
+        </div>
         <ExtensionSlot className={styles.dividerOverride} name="top-nav-info-slot" />
         <HeaderGlobalBar className={styles.headerGlobalBar}>
           <ExtensionSlot name="top-nav-actions-slot" className={styles.topNavActionsSlot} />
@@ -77,7 +103,7 @@ const HeaderItems: React.FC = () => {
               togglePanel: togglePanel,
             }}
           />
-          {showUserMenu && (
+          {/* {showUserMenu && (
             <HeaderGlobalAction
               aria-label={t('userMenuTooltip', 'My Account')}
               aria-labelledby="Users Avatar Icon"
@@ -94,25 +120,7 @@ const HeaderItems: React.FC = () => {
             >
               {isActivePanel('userMenu') ? <CloseIcon size={20} /> : <UserAvatarIcon size={20} />}
             </HeaderGlobalAction>
-          )}
-          {showAppMenu && (
-            <HeaderGlobalAction
-              aria-label={t('AppMenuTooltip', 'App Menu')}
-              aria-labelledby="App Menu"
-              className={classNames({
-                [styles.headerGlobalBarButton]: isActivePanel('appMenu'),
-                [styles.activePanel]: !isActivePanel('appMenu'),
-              })}
-              enterDelayMs={500}
-              isActive={isActivePanel('appMenu')}
-              tooltipAlignment="end"
-              onClick={() => {
-                togglePanel('appMenu');
-              }}
-            >
-              {isActivePanel('appMenu') ? <CloseIcon size={20} /> : <SwitcherIcon size={20} />}
-            </HeaderGlobalAction>
-          )}
+          )} */}
         </HeaderGlobalBar>
         {!isDesktop(layout) && <SideMenuPanel hidePanel={hidePanel('sideMenu')} expanded={isActivePanel('sideMenu')} />}
         {showAppMenu && <AppMenuPanel expanded={isActivePanel('appMenu')} hidePanel={hidePanel('appMenu')} />}
