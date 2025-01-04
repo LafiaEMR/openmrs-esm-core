@@ -1,244 +1,87 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useCallback } from 'react';
+import { type To, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, InlineLoading, InlineNotification, PasswordInput, TextInput, Tile } from '@carbon/react';
-import {
-  ArrowRightIcon,
-  getCoreTranslation,
-  refetchCurrentUser,
-  navigate as openmrsNavigate,
-  useConfig,
-  useConnectivity,
-  useSession,
-} from '@openmrs/esm-framework';
+import { navigate as openmrsNavigate, refetchCurrentUser, useConfig, useSession } from '@openmrs/esm-framework';
 import { type ConfigSchema } from '../config-schema';
-import Logo from '../logo.component';
-import Footer from '../footer.component';
-import styles from './login.scss';
+import { Loading } from '@carbon/react';
+import Cookies from 'js-cookie';
 
 export interface LoginReferrer {
   referrer?: string;
 }
 
 const Login: React.FC = () => {
-  const { showPasswordOnSeparateScreen, provider: loginProvider, links: loginLinks } = useConfig<ConfigSchema>();
-  const isLoginEnabled = useConnectivity();
+  const config = useConfig();
+  const { provider: loginProvider, links: loginLinks } = useConfig<ConfigSchema>();
   const { t } = useTranslation();
   const { user } = useSession();
   const location = useLocation() as unknown as Omit<Location, 'state'> & {
     state: LoginReferrer;
   };
-  const navigate = useNavigate();
-
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [showPasswordField, setShowPasswordField] = useState(false);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
-  const usernameInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!user) {
-      if (loginProvider.type === 'oauth2') {
-        openmrsNavigate({ to: loginProvider.loginUrl });
-      } else if (!username && location.pathname === '/login/confirm') {
-        navigate('/login');
+  const rawNavigate = useNavigate();
+  const navigate = useCallback(
+    (to: To) => {
+      rawNavigate(to, { state: location.state });
+    },
+    [rawNavigate, location.state],
+  );
+  const redirectToLoginFailure = () => {
+    window.location.href = config.links.loginFailure;
+  };
+  const handleLogin = useCallback(async () => {
+    try {
+      const token = JSON.parse(Cookies.get('token') || '');
+      const bearerToken = `Bearer ${token}`;
+      const authResponse = await fetch(config.provider.authApiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: bearerToken,
+        },
+      });
+      if (!authResponse.ok) {
+        throw new Error('Failed to fetch authentication data from LafiaAuth API');
       }
-    }
-  }, [username, navigate, location, user, loginProvider]);
+      const authData = await authResponse.json();
+      // Ensure the data field exists in the response
+      if (!authData.data) {
+        throw new Error('Invalid response format from LafiaAuth API');
+      }
+      // Step 2: Use the retrieved data field as the Authorization header
+      const encodedCredentials = authData.data;
+      const decodedCredentials = atob(encodedCredentials);
+      const [username, password] = decodedCredentials.split(':');
 
-  useEffect(() => {
-    if (showPasswordOnSeparateScreen) {
-      if (showPasswordField) {
-        passwordInputRef.current?.focus();
+      const sessionStore = await refetchCurrentUser(username, password);
+      const session = sessionStore.session;
+      const authenticated = sessionStore?.session?.authenticated;
+      if (authenticated) {
+        if (session.sessionLocation) {
+          let to = loginLinks?.loginSuccess || '/home';
+          if (location?.state?.referrer) {
+            if (location.state.referrer.startsWith('/')) {
+              to = `\${openmrsSpaBase}${location.state.referrer}`;
+            } else {
+              to = location.state.referrer;
+            }
+          }
+          openmrsNavigate({ to });
+        } else {
+          navigate('/login/location');
+        }
       } else {
-        usernameInputRef.current?.focus();
+        throw new Error(t('invalidCredentials', 'Invalid username or password'));
       }
-    }
-  }, [showPasswordField, showPasswordOnSeparateScreen]);
-
-  const continueLogin = useCallback(() => {
-    const usernameField = usernameInputRef.current;
-
-    if (usernameField?.value.trim()) {
-      setShowPasswordField(true);
-    } else {
-      usernameField?.focus();
+      return true;
+    } catch (error: unknown) {
+      redirectToLoginFailure();
     }
   }, []);
-
-  const changeUsername = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value), []);
-  const changePassword = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value), []);
-
-  const handleSubmit = useCallback(
-    async (evt: React.FormEvent<HTMLFormElement>) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-
-      if (showPasswordOnSeparateScreen && !showPasswordField) {
-        continueLogin();
-        return false;
-      }
-
-      if (!password || !password.trim()) {
-        passwordInputRef.current?.focus();
-        return false;
-      }
-
-      try {
-        setIsLoggingIn(true);
-        const sessionStore = await refetchCurrentUser(username, password);
-        const session = sessionStore.session;
-        const authenticated = sessionStore?.session?.authenticated;
-
-        if (authenticated) {
-          if (session.sessionLocation) {
-            let to = loginLinks?.loginSuccess || '/home';
-            if (location?.state?.referrer) {
-              if (location.state.referrer.startsWith('/')) {
-                to = `\${openmrsSpaBase}${location.state.referrer}`;
-              } else {
-                to = location.state.referrer;
-              }
-            }
-
-            openmrsNavigate({ to });
-          } else {
-            navigate('/login/location');
-          }
-        } else {
-          setErrorMessage(t('invalidCredentials', 'Invalid username or password'));
-          setUsername('');
-          setPassword('');
-          if (showPasswordOnSeparateScreen) {
-            setShowPasswordField(false);
-          }
-        }
-
-        return true;
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-        } else {
-          setErrorMessage(t('invalidCredentials', 'Invalid username or password'));
-        }
-        setUsername('');
-        setPassword('');
-        if (showPasswordOnSeparateScreen) {
-          setShowPasswordField(false);
-        }
-      } finally {
-        setIsLoggingIn(false);
-      }
-    },
-    [username, password, navigate, showPasswordOnSeparateScreen],
-  );
-
-  if (!loginProvider || loginProvider.type === 'basic') {
-    return (
-      <div className={styles.container}>
-        <Tile className={styles.loginCard}>
-          {errorMessage && (
-            <div className={styles.errorMessage}>
-              <InlineNotification
-                kind="error"
-                subtitle={t(errorMessage)}
-                title={getCoreTranslation('error')}
-                onClick={() => setErrorMessage('')}
-              />
-            </div>
-          )}
-          <div className={styles.center}>
-            <Logo t={t} />
-          </div>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.inputGroup}>
-              <TextInput
-                id="username"
-                type="text"
-                labelText={t('username', 'Username')}
-                value={username}
-                onChange={changeUsername}
-                ref={usernameInputRef}
-                required
-                autoFocus
-              />
-              {showPasswordOnSeparateScreen ? (
-                showPasswordField ? (
-                  <>
-                    <PasswordInput
-                      id="password"
-                      labelText={t('password', 'Password')}
-                      name="password"
-                      onChange={changePassword}
-                      ref={passwordInputRef}
-                      required
-                      value={password}
-                      showPasswordLabel={t('showPassword', 'Show password')}
-                      invalidText={t('validValueRequired', 'A valid value is required')}
-                    />
-                    <Button
-                      type="submit"
-                      className={styles.continueButton}
-                      renderIcon={(props) => <ArrowRightIcon size={24} {...props} />}
-                      iconDescription={t('loginButtonIconDescription', 'Log in button')}
-                      disabled={!isLoginEnabled || isLoggingIn}
-                    >
-                      {isLoggingIn ? (
-                        <InlineLoading className={styles.loader} description={t('loggingIn', 'Logging in') + '...'} />
-                      ) : (
-                        t('login', 'Log in')
-                      )}
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    className={styles.continueButton}
-                    renderIcon={(props) => <ArrowRightIcon size={24} {...props} />}
-                    iconDescription="Continue to password"
-                    onClick={continueLogin}
-                    disabled={!isLoginEnabled}
-                  >
-                    {t('continue', 'Continue')}
-                  </Button>
-                )
-              ) : (
-                <>
-                  <PasswordInput
-                    id="password"
-                    labelText={t('password', 'Password')}
-                    name="password"
-                    onChange={changePassword}
-                    ref={passwordInputRef}
-                    required
-                    value={password}
-                    showPasswordLabel={t('showPassword', 'Show password')}
-                    invalidText={t('validValueRequired', 'A valid value is required')}
-                  />
-                  <Button
-                    type="submit"
-                    className={styles.continueButton}
-                    renderIcon={(props) => <ArrowRightIcon size={24} {...props} />}
-                    iconDescription="Log in"
-                    disabled={!isLoginEnabled || isLoggingIn}
-                  >
-                    {isLoggingIn ? (
-                      <InlineLoading className={styles.loader} description={t('loggingIn', 'Logging in') + '...'} />
-                    ) : (
-                      t('login', 'Log in')
-                    )}
-                  </Button>
-                </>
-              )}
-            </div>
-          </form>
-        </Tile>
-        <Footer />
-      </div>
-    );
-  }
-  return null;
+  useEffect(() => {
+    const initiateLogin = async () => {
+      await handleLogin();
+    };
+    initiateLogin();
+  }, [user, loginProvider, handleLogin]);
+  return <Loading></Loading>;
 };
-
 export default Login;

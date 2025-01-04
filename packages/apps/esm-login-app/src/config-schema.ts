@@ -21,6 +21,12 @@ export const configSchema = {
       _description: 'The URL to use for an OAuth2 logout.',
       _validators: [validators.isUrl],
     },
+    authApiUrl: {
+      _type: Type.String,
+      _default: 'https://auth-api.lafialink-dev.com/api/v1/services/auth/openmrs',
+      _description: 'The URL for the authentication API from lafia core',
+      _validators: [validators.isUrl],
+    },
   },
   chooseLocation: {
     enabled: {
@@ -52,6 +58,12 @@ export const configSchema = {
       _type: Type.String,
       _description: 'The URL to redirect the user to after a successful login.',
       _default: '${openmrsSpaBase}/home',
+      _validators: [validators.isUrl],
+    },
+    loginFailure: {
+      _type: Type.String,
+      _description: 'The URL to redirect the user to after a failed authentication.',
+      _default: 'https://auth-dev.lafialink-dev.com/login',
       _validators: [validators.isUrl],
     },
   },

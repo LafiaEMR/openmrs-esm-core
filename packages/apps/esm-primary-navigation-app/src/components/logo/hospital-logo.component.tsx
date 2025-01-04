@@ -3,7 +3,10 @@ import styles from './logo.scss';
 
 const HospitalLogo: React.FC = () => {
   // TODO: Implement a api call to get logged in hospital logo
-  const hospitalLogo = { src: 'https://www.svgrepo.com/show/9275/atom.svg', alt: 'Hospital Logo' };
+  const hospitalLogo = {
+    src: 'https://static.vecteezy.com/system/resources/thumbnails/017/177/954/small/round-medical-cross-symbol-on-transparent-background-free-png.png',
+    alt: 'Hospital logo',
+  };
 
   return (
     <div className={styles.hospitalLogo}>
