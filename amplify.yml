@@ -1,0 +1,19 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - cd packages/apps/esm-core
+            - yarn install --frozen-lockfile
+        build:
+          commands:
+            - yarn build
+      artifacts:
+        baseDirectory: packages/apps/esm-core/dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - packages/apps/esm-core/node_modules/**/*
+          - node_modules/**/*
