@@ -21,6 +21,12 @@ export const configSchema = {
       _description: 'The URL to use for an OAuth2 logout.',
       _validators: [validators.isUrl],
     },
+    authApiUrl: {
+      _type: Type.String,
+      _default: 'https://auth-api.lafialink-dev.com/api/v1/services/auth/openmrs',
+      _description: 'The URL for the authentication API from lafia core',
+      _validators: [validators.isUrl],
+    },
   },
   chooseLocation: {
     enabled: {
