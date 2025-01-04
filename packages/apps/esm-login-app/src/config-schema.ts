@@ -60,6 +60,12 @@ export const configSchema = {
       _default: '${openmrsSpaBase}/home',
       _validators: [validators.isUrl],
     },
+    loginFailure: {
+      _type: Type.String,
+      _description: 'The URL to redirect the user to after a failed authentication.',
+      _default: 'https://auth-dev.lafialink-dev.com/login',
+      _validators: [validators.isUrl],
+    },
   },
   logo: {
     src: {
