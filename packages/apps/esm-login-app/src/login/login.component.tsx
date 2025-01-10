@@ -3,8 +3,9 @@ import { type To, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { navigate as openmrsNavigate, refetchCurrentUser, useConfig, useSession } from '@openmrs/esm-framework';
 import { type ConfigSchema } from '../config-schema';
-import { Loading } from '@carbon/react';
 import Cookies from 'js-cookie';
+import Logo from '../logo.component';
+import styles from './login.scss';
 
 export interface LoginReferrer {
   referrer?: string;
@@ -82,6 +83,10 @@ const Login: React.FC = () => {
     };
     initiateLogin();
   }, [user, loginProvider, handleLogin]);
-  return <Loading></Loading>;
+  return (
+    <div className={styles.center}>
+      <Logo t={t} />
+    </div>
+  );
 };
 export default Login;
