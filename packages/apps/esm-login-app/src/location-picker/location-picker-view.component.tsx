@@ -122,9 +122,14 @@ const LocationPickerView: React.FC<LocationPickerProps> = ({ hideWelcomeMessage,
     <div className={styles.locationPickerContainer}>
       <form onSubmit={handleSubmit}>
         <div className={styles.locationCard}>
-          <div className={styles.paddedContainer}>
+          <div>
             <p className={styles.welcomeTitle}>
-              {t('welcome', 'Welcome')} {currentUser}
+              {currentUser && (
+                <>
+                  Hi <span>{currentUser}</span>,
+                </>
+              )}{' '}
+              {t('welcome', 'Welcome')} to LafiaHMS
             </p>
             <p className={styles.welcomeMessage}>
               {t(
@@ -140,13 +145,6 @@ const LocationPickerView: React.FC<LocationPickerProps> = ({ hideWelcomeMessage,
             onChange={(locationUuid) => setActiveLocation(locationUuid)}
           />
           <div className={styles.footerContainer}>
-            <Checkbox
-              id="checkbox"
-              className={styles.savePreferenceCheckbox}
-              labelText={t('rememberLocationForFutureLogins', 'Remember my location for future logins')}
-              checked={savePreference}
-              onChange={(_, { checked }) => setSavePreference(checked)}
-            />
             <Button
               className={styles.confirmButton}
               kind="primary"
@@ -156,9 +154,17 @@ const LocationPickerView: React.FC<LocationPickerProps> = ({ hideWelcomeMessage,
               {isSubmitting ? (
                 <InlineLoading className={styles.loader} description={t('submitting', 'Submitting')} />
               ) : (
-                <span>{getCoreTranslation('confirm')}</span>
+                <span>{t('proceed', 'Proceed')}</span>
               )}
             </Button>
+
+            <Checkbox
+              id="checkbox"
+              className={styles.savePreferenceCheckbox}
+              labelText={t('rememberLocationForFutureLogins', 'Remember my last location henceforth')}
+              checked={savePreference}
+              onChange={(_, { checked }) => setSavePreference(checked)}
+            />
           </div>
         </div>
       </form>
