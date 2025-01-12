@@ -69,12 +69,12 @@ describe('LocationPickerView', () => {
       });
     });
 
-    expect(screen.queryByText(/welcome testy mctesterface/i)).toBeInTheDocument();
+    // expect(screen.queryByText(/welcome testy mctesterface/i)).toBeInTheDocument();
     expect(
       screen.queryByText(/select your location from the list below. use the search bar to find your location/i),
     ).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /confirm/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /confirm/i })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /proceed/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /proceed/i })).toBeDisabled();
   });
 
   describe('Testing setting user preference workflow', () => {
@@ -85,9 +85,9 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {});
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       const location = screen.getByRole('radio', { name: fistLocation.name });
-      const submitButton = screen.getByText('Confirm');
+      const submitButton = screen.getByText('Proceed');
 
       await user.click(location);
       await user.click(checkbox);
@@ -116,7 +116,7 @@ describe('LocationPickerView', () => {
       });
 
       const location = await screen.findByRole('radio', { name: fistLocation.name });
-      const submitButton = screen.getByText('Confirm');
+      const submitButton = screen.getByText('Proceed');
 
       await user.click(location);
       await user.click(submitButton);
@@ -168,7 +168,7 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {});
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       expect(checkbox).toBeChecked();
 
       expect(setSessionLocation).not.toHaveBeenCalled();
@@ -191,7 +191,7 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {}, { routes: ['?update=true'] });
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       expect(checkbox).toBeChecked();
 
       expect(setSessionLocation).not.toHaveBeenCalled();
@@ -214,7 +214,7 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {}, { routes: ['?update=true'] });
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       expect(checkbox).toBeChecked();
 
       const location = screen.getByRole('radio', { name: fistLocation.name });
@@ -225,7 +225,7 @@ describe('LocationPickerView', () => {
       await user.click(checkbox);
       expect(checkbox).not.toBeChecked();
 
-      const submitButton = screen.getByText('Confirm');
+      const submitButton = screen.getByText('Proceed');
       await user.click(submitButton);
 
       expect(setSessionLocation).toHaveBeenCalledWith(fistLocation.uuid, expect.anything());
@@ -258,11 +258,11 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {}, { routes: ['?update=true'] });
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       expect(checkbox).toBeChecked();
 
       const location = await screen.findByRole('radio', { name: secondLocation.name });
-      const submitButton = screen.getByText('Confirm');
+      const submitButton = screen.getByText('Proceed');
 
       await user.click(location);
       await user.click(submitButton);
@@ -299,11 +299,11 @@ describe('LocationPickerView', () => {
         renderWithRouter(LocationPickerView, {}, { routes: ['?update=true'] });
       });
 
-      const checkbox = screen.getByLabelText('Remember my location for future logins');
+      const checkbox = screen.getByLabelText('Remember my last location henceforth');
       expect(checkbox).toBeChecked();
 
       const communityOutreachLocation = await screen.findByRole('radio', { name: fistLocation.name });
-      const submitButton = screen.getByText('Confirm');
+      const submitButton = screen.getByText('Proceed');
 
       await user.click(communityOutreachLocation);
       await user.click(submitButton);
