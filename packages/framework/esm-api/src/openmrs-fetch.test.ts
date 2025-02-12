@@ -2,6 +2,7 @@ import { isObservable } from 'rxjs';
 import { getConfig as mockGetConfig } from '@openmrs/esm-config';
 import { navigate as mockNavigate } from '@openmrs/esm-navigation';
 import { openmrsFetch, openmrsObservableFetch } from './openmrs-fetch';
+import Cookies from 'js-cookie';
 
 describe('openmrsFetch', () => {
   beforeEach(() => {
@@ -14,6 +15,10 @@ describe('openmrsFetch', () => {
       writable: true,
       value: { assign: jest.fn() },
     });
+
+    jest.mock('js-cookie', () => ({
+      get: jest.fn(() => 'test-tenant-id'), // Return a fake tenantId
+    }));
   });
 
   afterEach(() => {
