@@ -5,6 +5,7 @@ import { getConfig } from '@openmrs/esm-config';
 import { navigate } from '@openmrs/esm-navigation';
 import { clearHistory } from '@openmrs/esm-navigation/src/index';
 import type { FetchResponse } from './types';
+import Cookies from 'js-cookie';
 
 export const restBaseUrl = '/ws/rest/v1';
 export const fhirBaseUrl = '/ws/fhir2/R4';
@@ -102,6 +103,13 @@ export function openmrsFetch<T = any>(path: string, fetchInit: FetchConfig = {})
   // We're going to need some headers
   if (!fetchInit.headers) {
     fetchInit.headers = {};
+  }
+
+  const user = JSON.parse(Cookies.get('user') || '');
+  // Add Tenant ID if it exists
+  const tenantId = user?.tenantId; // Adjust retrieval method if needed
+  if (tenantId) {
+    fetchInit.headers['X-Tenant-ID'] = tenantId;
   }
 
   /* Automatically stringify javascript objects being sent in the

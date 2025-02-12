@@ -9,7 +9,6 @@ import {
   useConnectivity,
   useSession,
   LocationPicker,
-  getCoreTranslation,
 } from '@openmrs/esm-framework';
 import type { LoginReferrer } from '../login/login.component';
 import { useDefaultLocation, useLocationCount } from './location-picker.resource';

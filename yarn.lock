@@ -3200,6 +3200,7 @@ __metadata:
     "@openmrs/esm-framework": "workspace:*"
     "@openmrs/webpack-config": "workspace:*"
     jest: "npm:^29.7.0"
+    js-cookie: "npm:^3.0.5"
     lodash-es: "npm:^4.17.21"
     react: "npm:^18.1.0"
     react-dom: "npm:^18.1.0"
@@ -13269,6 +13270,13 @@ __metadata:
   version: 0.4.4
   resolution: "jpeg-js@npm:0.4.4"
   checksum: 10/30bb6e16e79db4bd6edbecf1140039bbab326de876f2d20685f04a38d03f70ef9fada1886f0bf58832a4dba4aa179311fc4be7df3d756cab8f1c74d745542f38
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 10/366494b1630b9fb8abaef3659748db5dfd52c58c6fc3459b9f0a03b492593bc1b01c6dfcc066b46f6413c28edb3a00cc68fb61ea8cdf6991bedf1f100f8a389d
   languageName: node
   linkType: hard
 
