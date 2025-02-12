@@ -1,4 +1,6 @@
 @use '@carbon/styles/scss/spacing';
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/spacing' as *;
 @import '~@openmrs/esm-styleguide/src/vars';
 @import '../root.scss';
 
@@ -9,41 +11,48 @@
   align-items: center;
   height: 100vh;
   width: 100%;
-}
-
-.paddedContainer {
-  padding: spacing.$spacing-06 spacing.$spacing-06 spacing.$spacing-05;
+  padding: $spacing-06;
 }
 
 .locationCard {
   display: flex;
   flex-direction: column;
-  width: 23rem;
-  background-color: $ui-02;
+  width: 100%;
+  max-width: 500px;
+  // background-color: $ui-02;
   margin: 0;
-  border: 1px solid $ui-03;
 }
 
 .welcomeTitle {
-  @extend .productiveHeading03;
-  text-transform: capitalize;
+  @include type-style('heading-03');
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: $spacing-01;
+
+  & span {
+    text-transform: capitalize;
+  }
 }
 
 .welcomeMessage {
-  @extend .bodyLong01;
-  margin-top: spacing.$spacing-03;
-  color: $color-gray-70;
+  @include type-style('body-01');
+  text-align: center;
 }
 
 .footerContainer {
-  padding: spacing.$spacing-05 spacing.$spacing-06 spacing.$spacing-06;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: spacing.$spacing-05 0px;
 
   .savePreferenceCheckbox {
-    padding-bottom: spacing.$spacing-05 !important;
+    padding-top: spacing.$spacing-05 !important;
   }
 
   .confirmButton {
+    background-color: #1062fe;
     width: 100%;
+    max-width: 100%;
   }
 }
 
