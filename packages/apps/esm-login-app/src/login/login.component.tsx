@@ -72,6 +72,9 @@ const Login: React.FC = () => {
       } else {
         throw new Error(t('invalidCredentials', 'Invalid username or password'));
       }
+      // On success store tenant Id
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      localStorage.setItem('tenantId', decodedToken.tenantId);
       return true;
     } catch (error: unknown) {
       redirectToLoginFailure();
