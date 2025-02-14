@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 export const setupFetchInterceptor = () => {
   const { fetch: originalFetch } = window;
   window.fetch = async (...args) => {
@@ -9,8 +11,11 @@ export const setupFetchInterceptor = () => {
     // Initialize headers if they don't exist
     config.headers = config.headers || {};
 
-    // Add X-Tenant-ID header
-    const tenantId = localStorage.getItem('tenantId') || 'default';
+    // Add X-TenantID header
+    const user = JSON.parse(Cookies.get('user') || '');
+    const backupTenantId = user?.tenantId;
+    const tenantId = backupTenantId || localStorage.getItem('tenantId');
+
     config.headers = {
       ...config.headers,
       'X-TenantID': tenantId,
