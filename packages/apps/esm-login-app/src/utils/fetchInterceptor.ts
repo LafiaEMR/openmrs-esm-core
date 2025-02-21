@@ -14,7 +14,8 @@ export const setupFetchInterceptor = () => {
     // Add X-TenantID header
     const user = JSON.parse(Cookies.get('user') || '');
     const backupTenantId = user?.tenantId;
-    const tenantId = backupTenantId || localStorage.getItem('tenantId');
+    // const tenantId = backupTenantId || localStorage.getItem('tenantId');
+    const tenantId = backupTenantId;
 
     config.headers = {
       ...config.headers,
