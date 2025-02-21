@@ -1,12 +1,11 @@
 import React, { useEffect, useCallback } from 'react';
-import { type To, useLocation, useNavigate } from 'react-router-dom';
+import { type To, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { navigate as openmrsNavigate, refetchCurrentUser, useConfig, useSession } from '@openmrs/esm-framework';
 import { type ConfigSchema } from '../config-schema';
-import Cookies from 'js-cookie';
+
 import Logo from '../logo.component';
 import styles from './login.scss';
-import axios from 'axios';
 
 export interface LoginReferrer {
   referrer?: string;
@@ -27,31 +26,35 @@ const Login: React.FC = () => {
     },
     [rawNavigate, location.state],
   );
+  const [searchParams] = useSearchParams();
+  const encodedCredentials = searchParams.get('accessToken');
+
   const redirectToLoginFailure = () => {
     window.location.href = config.links.loginFailure;
   };
   const handleLogin = useCallback(async () => {
     try {
-      const token = JSON.parse(Cookies.get('token') || '');
-      const bearerToken = `Bearer ${token}`;
+      // const token = JSON.parse(Cookies.get('token') || '');
+      // const bearerToken = `Bearer ${token}`;
 
-      const authResponse = await axios.get(config.provider.authApiUrl, {
-        headers: {
-          Authorization: bearerToken,
-          'Content-Type': 'application/json',
-        },
-      });
+      // const authResponse = await axios.get(config.provider.authApiUrl, {
+      //   headers: {
+      //     Authorization: bearerToken,
+      //     'Content-Type': 'application/json',
+      //   },
+      //   // withCredentials: true,
+      // });
 
-      if (!authResponse.data.data) {
-        throw new Error('Failed to fetch authentication data from LafiaAuth API');
-      }
+      // if (!authResponse.data.data) {
+      //   throw new Error('Failed to fetch authentication data from LafiaAuth API');
+      // }
       // const authData = await authResponse.json();
       // Ensure the data field exists in the response
       // if (!authResponse.data) {
       //   throw new Error('Invalid response format from LafiaAuth API');
       // }
       // Step 2: Use the retrieved data field as the Authorization header
-      const encodedCredentials = authResponse.data.data;
+      // const encodedCredentials = authResponse.data.data; //access query param here
       const decodedCredentials = atob(encodedCredentials);
       const [username, password] = decodedCredentials.split(':');
 
@@ -76,8 +79,8 @@ const Login: React.FC = () => {
         throw new Error(t('invalidCredentials', 'Invalid username or password'));
       }
       // On success store tenant Id
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      localStorage.setItem('tenantId', decodedToken.tenantId);
+      // const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      // localStorage.setItem('tenantId', decodedToken.tenantId);
       return true;
     } catch (error: unknown) {
       redirectToLoginFailure();
