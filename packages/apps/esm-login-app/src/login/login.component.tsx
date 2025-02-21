@@ -6,6 +6,7 @@ import { type ConfigSchema } from '../config-schema';
 import Cookies from 'js-cookie';
 import Logo from '../logo.component';
 import styles from './login.scss';
+import axios from 'axios';
 
 export interface LoginReferrer {
   referrer?: string;
@@ -33,22 +34,24 @@ const Login: React.FC = () => {
     try {
       const token = JSON.parse(Cookies.get('token') || '');
       const bearerToken = `Bearer ${token}`;
-      const authResponse = await fetch(config.provider.authApiUrl, {
-        method: 'GET',
+
+      const authResponse = await axios.get(config.provider.authApiUrl, {
         headers: {
           Authorization: bearerToken,
+          'Content-Type': 'application/json',
         },
       });
-      if (!authResponse.ok) {
+
+      if (!authResponse.data.data) {
         throw new Error('Failed to fetch authentication data from LafiaAuth API');
       }
-      const authData = await authResponse.json();
+      // const authData = await authResponse.json();
       // Ensure the data field exists in the response
-      if (!authData.data) {
-        throw new Error('Invalid response format from LafiaAuth API');
-      }
+      // if (!authResponse.data) {
+      //   throw new Error('Invalid response format from LafiaAuth API');
+      // }
       // Step 2: Use the retrieved data field as the Authorization header
-      const encodedCredentials = authData.data;
+      const encodedCredentials = authResponse.data.data;
       const decodedCredentials = atob(encodedCredentials);
       const [username, password] = decodedCredentials.split(':');
 
