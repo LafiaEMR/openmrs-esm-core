@@ -12,15 +12,16 @@ export const setupFetchInterceptor = () => {
     config.headers = config.headers || {};
 
     // Add X-TenantID header
-    const user = JSON.parse(Cookies.get('user') || '');
-    const backupTenantId = user?.tenantId;
+    const user = Cookies.get('user') ? JSON.parse(Cookies.get('user') || '') : '';
+    const tenantId = user?.tenantId || '';
     // const tenantId = backupTenantId || localStorage.getItem('tenantId');
-    const tenantId = backupTenantId;
 
-    config.headers = {
-      ...config.headers,
-      'X-TenantID': tenantId,
-    };
+    if (tenantId) {
+      config.headers = {
+        ...config.headers,
+        'X-TenantID': tenantId,
+      };
+    }
 
     const response = await originalFetch(resource, config);
     return response;
