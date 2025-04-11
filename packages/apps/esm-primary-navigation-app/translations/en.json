@@ -1,9 +1,10 @@
 {
   "AppMenuTooltip": "App Menu",
+  "AppSwitcher": "App Switcher",
   "cancel": "Cancel",
   "change": "Change",
   "changeLanguage": "Change language",
+  "changeLocation": "Change location",
   "changingLanguage": "Changing language",
-  "notifications": "Notifications",
-  "userMenuTooltip": "My Account"
+  "notifications": "Notifications"
 }

@@ -1,0 +1,28 @@
+@import '~@openmrs/esm-styleguide/src/vars';
+
+.panelItemContainer a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: default;
+}
+
+.panelItemContainer div {
+  display: flex;
+  align-items: center;
+}
+
+// Prevent background color change on hover for buttons
+:global(.cds--btn) {
+  &:hover {
+    background-color: transparent;
+  }
+
+  &:focus {
+    background-color: transparent;
+  }
+
+  &:active {
+    background-color: transparent;
+  }
+}

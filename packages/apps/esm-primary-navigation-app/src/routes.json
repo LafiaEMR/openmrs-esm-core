@@ -55,6 +55,31 @@
       "component": "navGroup",
       "online": true,
       "offline": true
+    },
+
+    {
+      "name": "side-nav-footer",
+      "component": "sideNavFooterComponent",
+      "slot": "homepage-dashboard-slot",
+      "online": true,
+      "offline": true,
+      "order": 10
+    },
+    {
+      "name": "side-nav-profile",
+      "slot": "nav-footer-panel-slot",
+      "component": "sideNavProfile",
+      "online": true,
+      "offline": true,
+      "order": 0
+    },
+    {
+      "name": "change-location",
+      "slot": "nav-footer-panel-slot",
+      "component": "changeLocation",
+      "online": true,
+      "offline": true,
+      "order": 1
     }
   ],
   "modals": [

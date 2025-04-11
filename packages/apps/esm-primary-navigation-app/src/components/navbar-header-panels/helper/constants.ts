@@ -5,7 +5,7 @@ import LafiaErpLogo from '../../../../public/svg/lafiaErp';
 import LafiaMoreLogo from '../../../../public/svg/lafiaMore';
 
 export const appSwitcherLinks = [
-  { name: 'LafiaCore', href: '', Icon: LafiaCoreLogo },
+  { name: 'LafiaCore', href: 'https://admin.lafialink-dev.com/', Icon: LafiaCoreLogo },
   { name: 'LafiaHMS', href: '', Icon: LafiaHmsLogo },
   { name: 'LafiaLabs', href: '', Icon: LafiaLabsLogo },
   { name: 'LafiaERP', href: '', Icon: LafiaErpLogo },

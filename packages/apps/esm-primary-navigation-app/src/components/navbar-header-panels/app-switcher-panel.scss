@@ -35,6 +35,11 @@
   animation: fadeIn 0.3s ease-in-out;
   padding-bottom: $spacing-10;
   overflow: hidden;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .menu_item {
