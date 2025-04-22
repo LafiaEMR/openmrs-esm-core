@@ -7,7 +7,7 @@ export const configSchema = {
       _default: 'basic',
       _description:
         "Selects the login mechanism to use. Choices are 'basic' and 'oauth2'. " +
-        "For 'oauth2' you'll also need to set the 'loginUrl' and 'logoutUrl'.",
+        "For 'oauth2' you'll also need to set the 'loginUrl'",
     },
     loginUrl: {
       _type: Type.String,
@@ -63,7 +63,7 @@ export const configSchema = {
     loginFailure: {
       _type: Type.String,
       _description: 'The URL to redirect the user to after a failed authentication.',
-      _default: 'https://auth-dev.lafialink-dev.com/login',
+      _default: 'https://auth.lafialink-dev.com/login',
       _validators: [validators.isUrl],
     },
   },

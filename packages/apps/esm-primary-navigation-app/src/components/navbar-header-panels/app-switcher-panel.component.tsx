@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { appSwitcherLinks } from './helper/constants';
 import AppswitchArrow from '../../../public/svg/appSwitchArrow';
 import styles from './app-switcher-panel.scss';
-import { Link } from 'react-router-dom';
-import { useOnClickOutside } from '@openmrs/esm-framework';
+import { navigate , useOnClickOutside } from '@openmrs/esm-framework';
 
 interface AppSwitcherProps {
   menuOpen: boolean;
@@ -19,6 +18,10 @@ function AppSwitcherPanel({ menuOpen, hidePanel }: AppSwitcherProps) {
     return () => window.removeEventListener('popstate', hidePanel);
   }, [hidePanel]);
 
+  const handleLinkClick = useCallback((href: string) => {
+    navigate({ to: href });
+  }, []);
+
   return (
     <div ref={appSwitcherRef}>
       {' '}
@@ -26,15 +29,18 @@ function AppSwitcherPanel({ menuOpen, hidePanel }: AppSwitcherProps) {
         <div className={styles.menu}>
           <p className={styles.menu_item_title}>My Apps</p>
           {appSwitcherLinks.map(({ name, href, Icon }, index) => (
-            <Link key={name} to={href}>
-              <div className={styles.menu_container}>
-                <div className={styles.menu_container2}>
-                  <Icon />
-                  <p className={styles.menu_item}>{name}</p>
-                </div>
-                {index == 1 && <AppswitchArrow />}
+            <div
+              key={name}
+              className={styles.menu_container}
+              onClick={() => handleLinkClick(href)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className={styles.menu_container2}>
+                <Icon />
+                <p className={styles.menu_item}>{name}</p>
               </div>
-            </Link>
+              {index == 1 && <AppswitchArrow />}
+            </div>
           ))}
         </div>
       )}

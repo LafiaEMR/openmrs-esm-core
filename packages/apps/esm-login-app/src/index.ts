@@ -5,6 +5,7 @@ import changePasswordLinkComponent from './change-password/change-password-link.
 import locationPickerComponent from './location-picker/location-picker-view.component';
 import logoutButtonComponent from './logout/logout.extension';
 import rootComponent from './root.component';
+import { setupFetchInterceptor } from './utils/fetchInterceptor';
 
 const moduleName = '@openmrs/esm-login-app';
 
@@ -14,6 +15,9 @@ const options = {
 };
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
+
+// Setup the fetch interceptor
+setupFetchInterceptor();
 
 export function startupApp() {
   defineConfigSchema(moduleName, configSchema);
