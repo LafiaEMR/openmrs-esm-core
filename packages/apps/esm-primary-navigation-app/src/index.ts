@@ -16,6 +16,12 @@ import changeLanguageLinkComponent from './components/change-language/change-lan
 import offlineBannerComponent from './components/offline-banner/offline-banner.component';
 import { NavGroup, navGroupConfigSchema } from './components/nav-group/nav-group.component';
 import genericLinkComponent, { genericLinkConfigSchema } from './components/generic-link/generic-link.component';
+import UserMenuButton from './components/navbar/user-menu-button.component';
+import AppMenuButton from './components/navbar/app-menu-button.component';
+
+import SideNavFooterComponent from './components/side-nav-footer/SideNavFooter';
+import FooterNavProfile from './components/side-nav-footer/profile/nav-footer-profile';
+import ChangeLocation from './components/side-nav-footer/change-location-link/change-location-link.extension';
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
@@ -57,3 +63,18 @@ export const changeLanguageModal = getAsyncLifecycle(
   () => import('./components/change-language/change-language.modal'),
   options,
 );
+
+export const sideNavFooterComponent = getSyncLifecycle(SideNavFooterComponent, {
+  featureName: 'side-nav-footer',
+  moduleName,
+});
+
+export const sideNavProfile = getSyncLifecycle(FooterNavProfile, {
+  featureName: 'footer-nav-profile',
+  moduleName,
+});
+
+export const changeLocation = getSyncLifecycle(ChangeLocation, {
+  featureName: 'footer-nav-location',
+  moduleName,
+});

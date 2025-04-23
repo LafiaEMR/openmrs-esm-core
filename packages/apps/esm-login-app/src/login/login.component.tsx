@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { navigate as openmrsNavigate, refetchCurrentUser, useConfig, useSession } from '@openmrs/esm-framework';
 import { type ConfigSchema } from '../config-schema';
 import { Loading } from '@carbon/react';
+import axios from 'axios';
 
 export interface LoginReferrer {
   referrer?: string;
@@ -27,32 +28,63 @@ const Login: React.FC = () => {
   const [searchParams] = useSearchParams();
   const encodedCredentials = searchParams.get('accessToken');
 
+  // Get user ID from token cache
+  const getUserIdFromToken = () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Remove any quotes and decode URI component
+        const cleanToken = token.replace(/^["']|["']$/g, '');
+        const decodedToken = decodeURIComponent(cleanToken);
+
+        // Split the JWT token into its parts
+        const [header, payload, signature] = decodedToken.split('.');
+
+        // Decode the payload
+        const decodedPayload = atob(payload);
+        const payloadData = JSON.parse(decodedPayload);
+
+        return payloadData.userId;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting user ID from token:', error);
+      return null;
+    }
+  };
+
+  // Check KYC verification status
+  const checkKYCStatus = async (userId: number) => {
+    try {
+      const response = await axios.get(`https://dev-api.lafialink-dev.com/api/v1/user/findUserById/${userId}`);
+      if (response.data.status === 'SUCCESS' && response.data.data) {
+        return response.data.data.kycComplete;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error checking KYC status:', error);
+      return false;
+    }
+  };
+
   const redirectToLoginFailure = () => {
     window.location.href = config.links.loginFailure;
   };
+
   const handleLogin = useCallback(async () => {
     try {
-      // const token = JSON.parse(Cookies.get('token') || '');
-      // const bearerToken = `Bearer ${token}`;
+      // Get user ID from token cache
+      const userId = getUserIdFromToken();
+      if (!userId) {
+        throw new Error('User ID not found in token');
+      }
 
-      // const authResponse = await axios.get(config.provider.authApiUrl, {
-      //   headers: {
-      //     Authorization: bearerToken,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   // withCredentials: true,
-      // });
+      // Check KYC status
+      const isKYCVerified = await checkKYCStatus(userId);
+      if (!isKYCVerified) {
+        redirectToLoginFailure();
+      }
 
-      // if (!authResponse.data.data) {
-      //   throw new Error('Failed to fetch authentication data from LafiaAuth API');
-      // }
-      // const authData = await authResponse.json();
-      // Ensure the data field exists in the response
-      // if (!authResponse.data) {
-      //   throw new Error('Invalid response format from LafiaAuth API');
-      // }
-      // Step 2: Use the retrieved data field as the Authorization header
-      // const encodedCredentials = authResponse.data.data; //access query param here
       const decodedCredentials = atob(encodedCredentials);
       const [username, password] = decodedCredentials.split(':');
 
@@ -76,9 +108,6 @@ const Login: React.FC = () => {
       } else {
         throw new Error(t('invalidCredentials', 'Invalid username or password'));
       }
-      // On success store tenant Id
-      // const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      // localStorage.setItem('tenantId', decodedToken.tenantId);
       return true;
     } catch (error: unknown) {
       redirectToLoginFailure();
@@ -93,4 +122,5 @@ const Login: React.FC = () => {
 
   return <Loading />;
 };
+
 export default Login;
