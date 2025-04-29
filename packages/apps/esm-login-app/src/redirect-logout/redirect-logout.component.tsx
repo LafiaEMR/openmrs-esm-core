@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { navigate, setUserLanguage, useConfig, useConnectivity, useSession } from '@openmrs/esm-framework';
 import { clearHistory } from '@openmrs/esm-framework/src/internal';
 import { type ConfigSchema } from '../config-schema';
@@ -9,11 +9,15 @@ const RedirectLogout: React.FC = () => {
   const isLoginEnabled = useConnectivity();
   const session = useSession();
 
+  const redirect = useCallback(() => {
+    navigate({ to: 'https://auth.lafialink-dev.com/logout' });
+  }, []);
+
   useEffect(() => {
     clearHistory();
     if (!session.authenticated || !isLoginEnabled) {
       if (config.provider.type !== 'oauth2') {
-        navigate({ to: '${openmrsSpaBase}/login' });
+        redirect();
       }
     } else {
       performLogout()
@@ -26,9 +30,7 @@ const RedirectLogout: React.FC = () => {
             sessionId: '',
           });
 
-          if (config.provider.type !== 'oauth2') {
-            navigate({ to: '${openmrsSpaBase}/login' });
-          }
+          redirect();
         })
         .catch((error) => {
           console.error('Logout failed:', error);
