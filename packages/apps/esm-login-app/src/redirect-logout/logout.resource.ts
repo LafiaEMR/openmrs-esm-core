@@ -1,10 +1,14 @@
 import { mutate } from 'swr';
 import { clearCurrentUser, openmrsFetch, refetchCurrentUser, restBaseUrl } from '@openmrs/esm-framework';
+import Cookies from 'js-cookie';
 
 export async function performLogout() {
   // Call Lafia logout API
   try {
-    const token = JSON.parse(localStorage.getItem('token') || '');
+    const token = JSON.parse(Cookies.get('token') || '');
+    if (!token) {
+      throw new Error('No token found in cookies');
+    }
     await fetch('https://dev-api.lafialink-dev.com/api/v1/user/logout', {
       method: 'POST',
       headers: {
